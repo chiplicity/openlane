@@ -94,11 +94,11 @@ RUN git clone -b v1.8.1 https://github.com/gabime/spdlog.git \
     && cd spdlog \
     && mkdir build \
     && cd build \
-    && cmake .. -DSPDLOG_BUILD_SHARED=ON \
+    && cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
     && make install -j $(nproc)
 
 ARG OPENDB_REPO=https://github.com/ax3ghazy/OpenDB
-ARG OPENDB_COMMIT=42f79179973dc806e4016b1fa64e1932e1e514d5
+ARG OPENDB_COMMIT=606dd887a6b77cf1fab464a8b8e4968f3885c01e
 ARG MAINTAINER_STAMP=08022021
 
 RUN git clone --recursive ${OPENDB_REPO} OpenDB_${MAINTAINER_STAMP}
@@ -108,8 +108,9 @@ WORKDIR /OpenDB_${MAINTAINER_STAMP}/
 RUN git checkout ${OPENDB_COMMIT}
 
 RUN mkdir build && mkdir -p /build/version && mkdir install
-RUN cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install .. && make -j$(nproc) opendbpy
+RUN cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install .. && make -j$(nproc) opendbpy && make install
 
+RUN cp -r build/install/lib /build/
 RUN cp -r build/src/swig/python /build/OpenDB_python
 
 RUN date +"Build Timestamp: %Y-%m-%d_%H-%M-%S" > /build/version/opendb.version

@@ -128,14 +128,11 @@ RUN git apply rails.patch
 COPY setup_local.patch /OpenROAD_${MAINTAINER_STAMP}/src/OpenDB/src/swig/python
 RUN cd /OpenROAD_${MAINTAINER_STAMP}/src/OpenDB/src/swig/python && git apply setup_local.patch
 
-# COPY pdngen_export_subst.patch /OpenROAD_${MAINTAINER_STAMP}/
-# RUN git apply pdngen_export_subst.patch
+COPY pdngen_export.patch /OpenROAD_${MAINTAINER_STAMP}/
+RUN git apply pdngen_export.patch
 
 COPY ignore_obs_outside.patch /OpenROAD_${MAINTAINER_STAMP}/
 RUN git apply ignore_obs_outside.patch
-
-# COPY opendp-diamond-search.patch /OpenROAD_${MAINTAINER_STAMP}/
-# RUN git apply opendp-diamond-search.patch
 
 # Build OpenROAD
 RUN mkdir build && mkdir -p /build/version && mkdir install

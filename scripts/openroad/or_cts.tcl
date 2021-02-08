@@ -38,9 +38,7 @@ repair_clock_inverters
 puts "\[INFO\]: Configuring cts characterization..."
 configure_cts_characterization\
     -max_slew $max_slew\
-    -max_cap $max_cap\
-    -sqr_cap $::env(CTS_SQR_CAP)\
-    -sqr_res $::env(CTS_SQR_RES)
+    -max_cap $max_cap
 
 puts "\[INFO]: Performing clock tree synthesis..."
 puts "\[INFO]: Looking for the following net(s): $::env(CLOCK_NET)"
@@ -60,7 +58,7 @@ write_def $::env(SAVE_DEF)
 set buffers "$::env(CTS_ROOT_BUFFER) $::env(CTS_CLK_BUFFER_LIST)" 
 set_placement_padding -masters $buffers -left $::env(CELL_PAD)
 puts "\[INFO\]: Legalizing..."
-detailed_placement -diamond_search_height $::env(PL_DIAMOND_SEARCH_HEIGHT)
+detailed_placement
 write_def $::env(SAVE_DEF)
 if { [check_placement -verbose] } {
 	exit 1

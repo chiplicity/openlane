@@ -5,7 +5,7 @@ index 772c7121..08de8071 100644
 @@ -1074,6 +1074,11 @@ void GlobalRouter::computeObstaclesAdjustments()
        int trackSpace = _grid->getMinWidths()[layer - 1];
  
-       for (odb::Rect& obs : layerObstacles) {
+       for (odb::Rect& obs : layerObstructions) {
 +        if (obs.xMax() <= _grid->getLowerLeftX() || obs.xMin() >= _grid->getUpperRightX() ||
 +	    obs.yMax() <= _grid->getLowerLeftY() || obs.yMin() >= _grid->getUpperRightY()) {
 +		continue;

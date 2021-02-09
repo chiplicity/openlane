@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-foreach lib $::env(LIB_OPT) {
-    read_liberty $lib
+foreach lib $::env(LIB_SYNTH_COMPLETE) {
+	read_liberty $lib
 }
+
 if {[catch {read_lef $::env(MERGED_LEF_UNPADDED)} errmsg]} {
     puts stderr $errmsg
     exit 1
@@ -25,8 +26,14 @@ if {[catch {read_def $::env(CURRENT_DEF)} errmsg]} {
     exit 1
 }
 
-set_wire_rc -layer $::env(WIRE_RC_LAYER)
-estimate_parasitics -placement
-repair_design -max_wire_length $::env(MAX_WIRE_LENGTH)
-#check_in_core
+
+if {[catch {pdngen $::env(PDN_CFG) -verbose} errmsg]} {
+    puts stderr $errmsg
+    exit 1
+}
+
+# checks for unconnected nodes (e.g., isolated rails or stripes)
+check_power_grid -net $::env(VDD_NET)
+check_power_grid -net $::env(GND_NET)
+
 write_def $::env(SAVE_DEF)

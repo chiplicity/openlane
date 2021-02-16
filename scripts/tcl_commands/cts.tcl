@@ -77,7 +77,9 @@ proc run_cts {args} {
 		puts_info "Running TritonCTS..."
 		set ::env(CURRENT_STAGE) cts
 		TIMER::timer_start
-
+        if { ! [info exists ::env(DONT_USE_CELLS)] } {
+            gen_exclude_list -lib $::env(TMP_DIR)/cts/full.lib -drc_exclude_only -create_dont_use_list
+        }
 		if { ! [info exists ::env(CLOCK_NET)] } {
 			set ::env(CLOCK_NET) $::env(CLOCK_PORT)
 		}

@@ -35,11 +35,6 @@ set_wire_rc -layer $::env(WIRE_RC_LAYER)
 estimate_parasitics -placement
 repair_clock_inverters
 
-puts "\[INFO\]: Configuring cts characterization..."
-configure_cts_characterization\
-    -max_slew $max_slew\
-    -max_cap $max_cap
-
 puts "\[INFO]: Performing clock tree synthesis..."
 puts "\[INFO]: Looking for the following net(s): $::env(CLOCK_NET)"
 puts "\[INFO]: Running Clock Tree Synthesis..."
@@ -54,6 +49,11 @@ clock_tree_synthesis\
 
 puts "\[INFO]: Repairing long wires on clock nets..."
 # CTS leaves a long wire from the pad to the clock tree root.
+set_propagated_clock [all_clocks]
+estimate_parasitics -placement
+if { [info exists ::env(DONT_USE_CELLS)] } {
+    set_dont_use $::env(DONT_USE_CELLS)
+}
 repair_clock_nets
 
 write_def $::env(SAVE_DEF)
